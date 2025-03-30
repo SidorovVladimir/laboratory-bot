@@ -11,8 +11,7 @@ import {
 } from './handlers/index.js';
 import { getSession } from './sessions/state.js';
 
-const bot = new Bot('7658900052:AAHcNwRbLpRj3rLIS0sGz8WQfxVXQQbDmqA');
-
+const bot = new Bot();
 bot.use(getSession);
 
 bot.api.setMyCommands([
