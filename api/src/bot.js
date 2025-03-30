@@ -1,43 +1,37 @@
 import 'dotenv/config';
-import { Bot, GrammyError, HttpError, session, webhookCallback } from 'grammy';
+import { Bot } from 'grammy';
 
+import { setupMenuCommand, setupStartCommand } from './commands/index.js';
 import {
-  setupStartCommand,
-  setupAreaCommand,
-  setupWeatherCommand,
-} from './commands/index.js';
-import { setupMessageHandler } from './handlers/index.js';
+  setupAreaHandler,
+  setupBackHandler,
+  setupMessageHandler,
+  setupWeatherHandler,
+  setupErrorHandler,
+} from './handlers/index.js';
+import { getSession } from './sessions/state.js';
 
-const botToken = process.env.BOT_TOKEN;
+const bot = new Bot('7658900052:AAHcNwRbLpRj3rLIS0sGz8WQfxVXQQbDmqA');
 
-const bot = new Bot(botToken);
-bot.use(session({ initial: () => ({}) }));
+bot.use(getSession);
 
 bot.api.setMyCommands([
   { command: 'start', description: 'Запуск бота' },
-  { command: 'weather', description: 'Прогноз погоды' },
   {
-    command: 'area',
-    description: 'Расчитать площадь боковой поверхности цилиндра',
+    command: 'menu',
+    description: 'Меню',
   },
 ]);
 
 setupStartCommand(bot);
-setupWeatherCommand(bot);
-setupAreaCommand(bot);
+setupMenuCommand(bot);
+
+setupAreaHandler(bot);
+setupBackHandler(bot);
+setupWeatherHandler(bot);
+
 setupMessageHandler(bot);
 
-bot.catch((err) => {
-  const ctx = err.ctx;
-  console.error(`Error while handling update ${ctx.update.update_id}:`);
-  const e = err.error;
-  if (e instanceof GrammyError) {
-    console.error('Error in request:', e.description);
-  } else if (e instanceof HttpError) {
-    console.error('Could not contact Telegram:', e);
-  } else {
-    console.error('Unknown error:', e);
-  }
-});
+setupErrorHandler(bot);
 
-export default webhookCallback(bot, 'https');
+bot.start();
