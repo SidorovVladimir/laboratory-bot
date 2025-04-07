@@ -14,7 +14,7 @@ import {
 } from './handlers/index.js';
 import { getSession } from './sessions/state.js';
 
-const token = process.env.BOT_TOKEN_TEST;
+const token = process.env.BOT_TOKEN;
 const bot = new Bot(token);
 
 bot.use(getSession);
@@ -39,4 +39,5 @@ setupWeatherHandler(bot);
 setupMessageHandler(bot);
 
 setupErrorHandler(bot);
+
 export default webhookCallback(bot, 'https');
