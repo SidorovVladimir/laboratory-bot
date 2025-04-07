@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { Bot, webhookCallback } from 'grammy';
+import { Bot } from 'grammy';
 
 import { setupMenuCommand, setupStartCommand } from './commands/index.js';
 import {
@@ -14,7 +14,7 @@ import {
 } from './handlers/index.js';
 import { getSession } from './sessions/state.js';
 
-const token = process.env.BOT_TOKEN;
+const token = process.env.BOT_TOKEN_TEST;
 const bot = new Bot(token);
 
 bot.use(getSession);
@@ -40,4 +40,4 @@ setupMessageHandler(bot);
 
 setupErrorHandler(bot);
 
-export default webhookCallback(bot, 'https');
+bot.start();
