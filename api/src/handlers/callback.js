@@ -1,4 +1,37 @@
-import { backKeyboard, menuKeyboard } from '../keyboards/index.js';
+import {
+  areaMenu,
+  backKeyboard,
+  calculationsMenu,
+  mainMenu,
+  toolsMenu,
+} from '../keyboards/index.js';
+
+export const menuCalculations = (bot) => {
+  bot.callbackQuery('menu_calculations', async (ctx) => {
+    await ctx.editMessageText('Выберите пункт меню', {
+      reply_markup: calculationsMenu,
+    });
+    await ctx.answerCallbackQuery();
+  });
+};
+
+export const menuArea = (bot) => {
+  bot.callbackQuery('calc_area', async (ctx) => {
+    await ctx.editMessageText('Выберите пункт меню', {
+      reply_markup: areaMenu,
+    });
+    await ctx.answerCallbackQuery();
+  });
+};
+
+export const setupToolsMenu = (bot) => {
+  bot.callbackQuery('menu_tools', async (ctx) => {
+    await ctx.editMessageText('Выберите пункт меню', {
+      reply_markup: toolsMenu,
+    });
+    await ctx.answerCallbackQuery();
+  });
+};
 
 export const setupAreaHandler = (bot) => {
   bot.callbackQuery('area', async (ctx) => {
@@ -20,7 +53,7 @@ export const setupAreaHandler = (bot) => {
 };
 
 export const setupWeatherHandler = (bot) => {
-  bot.callbackQuery('weather', async (ctx) => {
+  bot.callbackQuery('tool_weather', async (ctx) => {
     try {
       await ctx.editMessageText('Введите город', {
         reply_markup: backKeyboard,
@@ -35,16 +68,11 @@ export const setupWeatherHandler = (bot) => {
   });
 };
 
-export const setupBackHandler = (bot) => {
-  bot.callbackQuery('back', async (ctx) => {
-    try {
-      await ctx.editMessageText('Выберите пункт меню', {
-        reply_markup: menuKeyboard,
-      });
-      ctx.session.area.state = 'idle';
-    } catch (error) {
-      console.error('Ошибка при возврате в меню:', error);
-    }
+export const backMainMenu = (bot) => {
+  bot.callbackQuery('menu_main', async (ctx) => {
+    await ctx.editMessageText('Выберите пункт меню', {
+      reply_markup: mainMenu,
+    });
     await ctx.answerCallbackQuery();
   });
 };

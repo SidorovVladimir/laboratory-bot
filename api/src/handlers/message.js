@@ -1,5 +1,5 @@
 import { calculateArea } from '../utils/calculateArea.js';
-import { menuKeyboard } from '../keyboards/index.js';
+import { mainMenu } from '../keyboards/index.js';
 import { getWeather } from '../api/weather/index.js';
 
 export const setupMessageHandler = (bot) => {
@@ -14,7 +14,7 @@ export const setupMessageHandler = (bot) => {
           ctx.chat.id,
           ctx.session.menuMessageId,
           `Площадь боковой поверхности = ${area.toFixed(3)} m2`,
-          { reply_markup: menuKeyboard }
+          { reply_markup: mainMenu }
         );
 
         ctx.session.area.state = 'idle';
@@ -30,7 +30,7 @@ export const setupMessageHandler = (bot) => {
           `Погода в городе ${value}:\nТемпература ${temp_c}°C\nДавление ${
             pressure_mb / 10
           } кПа\nВлажность ${humidity}%`,
-          { reply_markup: menuKeyboard }
+          { reply_markup: mainMenu }
         );
 
         ctx.session.weather.state = 'idle';
