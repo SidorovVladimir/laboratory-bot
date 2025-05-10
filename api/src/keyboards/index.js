@@ -19,6 +19,13 @@ export const calculationsMenu = new InlineKeyboard()
   .row()
   .text('🔙 Назад в главное меню', 'menu_main');
 
+export const flowRateMenu = new InlineKeyboard()
+  .text('Прямоугольная система', 'rectangular')
+  .row()
+  .text('Круглая система', 'circular')
+  .row()
+  .text('🔙 Назад в главное меню', 'menu_main');
+
 export const areaMenu = new InlineKeyboard()
   .text('📐 Площадь боковой поверхности цилиндра', 'area')
   .row()

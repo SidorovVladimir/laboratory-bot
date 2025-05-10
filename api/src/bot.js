@@ -11,6 +11,9 @@ import {
   backMainMenu,
   setupToolsMenu,
   menuArea,
+  menuFlowRate,
+  setupRectangularHandler,
+  setupCircularHandler,
 } from './handlers/index.js';
 import { getSession } from './sessions/state.js';
 
@@ -28,11 +31,14 @@ bot.api.setMyCommands([
 ]);
 menuCalculations(bot);
 menuArea(bot);
+menuFlowRate(bot);
 setupStartCommand(bot);
 setupMenuCommand(bot);
 setupToolsMenu(bot);
 
 setupAreaHandler(bot);
+setupRectangularHandler(bot);
+setupCircularHandler(bot);
 backMainMenu(bot);
 setupWeatherHandler(bot);
 
