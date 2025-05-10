@@ -7,4 +7,7 @@ export {
   setupToolsMenu,
   setupAreaHandler,
   setupWeatherHandler,
+  menuFlowRate,
+  setupRectangularHandler,
+  setupCircularHandler,
 } from './callback.js';

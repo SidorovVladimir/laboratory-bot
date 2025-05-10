@@ -5,6 +5,9 @@ export const getSession = session({
     area: {
       state: 'idle',
     },
+    flowRate: {
+      state: 'idle',
+    },
     weather: {
       state: 'idle',
     },
