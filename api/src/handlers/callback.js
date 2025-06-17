@@ -37,7 +37,7 @@ export const setupAreaHandler = (bot) => {
   bot.callbackQuery('area', async (ctx) => {
     try {
       await ctx.editMessageText(
-        'Введите данные для расчета в формате (мм): радиус основания/высота цилиндра',
+        'Введите данные для расчета в формате (мм): диаметр цилиндра/высота цилиндра',
         {
           reply_markup: backKeyboard,
         }
