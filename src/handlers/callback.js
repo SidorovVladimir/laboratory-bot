@@ -1,3 +1,5 @@
+import { client } from '../db.js';
+import { InputFile } from 'grammy';
 import {
   areaMenu,
   backKeyboard,
@@ -5,7 +7,9 @@ import {
   mainMenu,
   toolsMenu,
   flowRateMenu,
+  ppeMenu,
 } from '../keyboards/index.js';
+import { createPdfBuffer } from '../utils/generatePdf.js';
 
 // Главное меню
 
@@ -132,6 +136,17 @@ export const setupWeatherHandler = (bot) => {
   });
 };
 
+// Меню средств индивидуальной защиты
+
+export const menuPPE = (bot) => {
+  bot.callbackQuery('menu_ppe', async (ctx) => {
+    await ctx.editMessageText('Выберите пункт меню', {
+      reply_markup: ppeMenu,
+    });
+    await ctx.answerCallbackQuery();
+  });
+};
+
 // Назад в главное меню
 
 export const backMainMenu = (bot) => {
@@ -140,5 +155,42 @@ export const backMainMenu = (bot) => {
       reply_markup: mainMenu,
     });
     await ctx.answerCallbackQuery();
+  });
+};
+
+//  Получение списка СИЗ
+const getList = `
+SELECT s.full_name as name, ptyp.name as type, pt.name as templates, pos.number_months as month, ppe.end_date as date FROM users s
+JOIN personal_protective_equipments ppe ON s.id = ppe.user_id
+JOIN ppe_templates pt ON ppe.template_id = pt.id
+JOIN ppe_types ptyp ON ptyp.id = pt.type_id
+JOIN ppe_operating_standarts pos ON pos.id = pt.ppe_operating_id
+`;
+
+export const getListPPE = (bot) => {
+  bot.callbackQuery('ppe_list', async (ctx) => {
+    try {
+      const result = await client.query(getList);
+      const data = result.rows;
+      if (data.length === 0) {
+        return ctx.reply('Нет данных для отчёта.');
+      }
+
+      await ctx.reply('📄 Генерирую PDF-отчёт...');
+
+      const pdfBuffer = await createPdfBuffer(data);
+
+      await ctx.replyWithDocument(
+        new InputFile(pdfBuffer, 'Отчет по СИЗ.pdf'),
+        {
+          caption: '✅ Готово! Вот ваш отчёт в формате PDF.',
+        }
+      );
+
+      await ctx.answerCallbackQuery();
+    } catch (err) {
+      console.error('Ошибка генерации PDF:', err);
+      await ctx.reply('❌ Произошла ошибка при создании отчёта.');
+    }
   });
 };

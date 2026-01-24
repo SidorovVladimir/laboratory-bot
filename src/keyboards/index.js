@@ -7,8 +7,17 @@ export const backKeyboard = new InlineKeyboard().text(
 
 export const mainMenu = new InlineKeyboard()
   .text('🧮 Расчеты', 'menu_calculations')
-  .row() // Переход на новую строку
-  .text('🌍 Полезные возможности', 'menu_tools');
+  .row()
+  .text('🌍 Полезные возможности', 'menu_tools')
+  .row()
+  .text('СИЗ', 'menu_ppe');
+
+export const ppeMenu = new InlineKeyboard()
+  .text('Список СИЗ', 'ppe_list')
+  .row()
+  .text('Настройки', 'settings_menu')
+  .row()
+  .text('🔙 Назад в главное меню', 'menu_main');
 
 export const calculationsMenu = new InlineKeyboard()
   .text('⚡ Скорость потока', 'calc_flow_speed')
@@ -33,9 +42,5 @@ export const areaMenu = new InlineKeyboard()
 
 export const toolsMenu = new InlineKeyboard()
   .text('☀️ Прогноз погоды', 'tool_weather') // Кнопка "Прогноз погоды"
-  .row()
-  .text('💰 Конвертер валют', 'tool_currency') // Кнопка "Конвертер валют"
-  .row()
-  .text('🎲 Генератор случайных чисел', 'tool_random') // Кнопка "Генератор случайных чисел"
   .row()
   .text('🔙 Назад в главное меню', 'menu_main'); // Кнопка "Назад"
