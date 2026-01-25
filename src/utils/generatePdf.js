@@ -74,6 +74,15 @@ export const createPdfBuffer = async (data) => {
     printBackground: true,
     margin: { top: '20px', right: '20px', bottom: '20px', left: '20px' },
     preferCSSPageSize: true,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-accelerated-2d-canvas',
+      '--disable-gpu',
+      '--headless',
+      '--headless=new',
+    ],
   };
 
   const file = { content: htmlContent };
