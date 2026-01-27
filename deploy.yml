@@ -1,0 +1,112 @@
+---
+- name: Развертывание бота и восстановление БД
+  hosts: server
+  vars:
+    remote_username: diabloboom
+    app_dir: '/home/{{ remote_username }}/bot'
+    dump_dir: '/home/{{ remote_username }}/backups'
+    repo_url: 'https://github.com/SidorovVladimir/laboratory-bot.git'
+    branch: 'test'
+    db_name: 'laboratory_niir'
+    dump_file: '{{dump_dir}}/laboratory_niir_2026-01-25_201325.sql'
+    pg_password: '{{ vault_db_pass }}'
+
+  tasks:
+    - name: Убедиться, что PostgreSQL запущен
+      ansible.builtin.service:
+        name: postgresql
+        state: started
+      become: yes
+
+    - name: Создать директорию для дампа
+      ansible.builtin.file:
+        path: '{{ dump_dir }}'
+        state: directory
+        owner: '{{ remote_username }}'
+        mode: '0755'
+
+    - name: Передать дамп базы на сервер
+      ansible.builtin.copy:
+        src: laboratory_niir_2026-01-25_201325.sql
+        dest: '{{ dump_file }}'
+        owner: '{{ remote_username }}'
+        mode: '0644'
+
+    - name: Удалить несовместимые настройки из дампа
+      ansible.builtin.lineinfile:
+        path: '{{ dump_file }}'
+        regexp: 'SET transaction_timeout = 0;'
+        state: absent
+
+    - name: Применить SQL-дамп (только если база пуста или нужен принудительный импорт)
+      become_user: '{{ remote_username }}'
+      ansible.builtin.shell: |
+        psql -U laboratory_bot -d {{ db_name }} -h localhost -f {{ dump_file }}
+      environment:
+        PGPASSWORD: '{{ pg_password }}'
+      args:
+        executable: /bin/bash
+      register: db_res
+      changed_when: "'INSERT' in db_res.stdout or 'CREATE' in db_res.stdout"
+      failed_when:
+        - "'ERROR' in db_res.stderr"
+        - "'transaction_timeout' not in db_res.stderr"
+        - "'FATAL' in db_res.stdout"
+
+    - name: Клонировать репозиторий (ветка test)
+      ansible.builtin.git:
+        repo: '{{ repo_url }}'
+        dest: '{{ app_dir }}'
+        version: '{{ branch }}'
+        force: yes
+      become_user: '{{ remote_username }}'
+
+    - name: Передать .env файл
+      ansible.builtin.copy:
+        src: .env
+        dest: '{{ app_dir }}/.env'
+        owner: '{{ remote_username }}'
+        mode: '0600'
+      become_user: '{{ remote_username }}'
+
+    - name: Установить зависимости через npm
+      ansible.builtin.npm:
+        path: '{{ app_dir }}'
+        production: yes
+      become_user: '{{ remote_username }}'
+
+    - name: Установить зависимости для Puppeteer
+      become: yes
+      ansible.builtin.apt:
+        name:
+          - libxfixes3
+          - libatk1.0-0
+          - libatk-bridge2.0-0
+          - libcups2
+          - libdrm2
+          - libxcomposite1
+          - libxdamage1
+          - libxrandr2
+          - libgbm1
+          - libpango-1.0-0
+          - libcairo2
+          - libasound2
+          - libxkbcommon0
+          - libnss3
+          - libxshmfence1
+        state: present
+        update_cache: yes
+
+    - name: Запустить или перезапустить приложение через PM2
+      become_user: '{{ remote_username }}'
+      ansible.builtin.shell: |
+        pm2 describe laboratory-bot > /dev/null 2>&1
+        if [ $? -ne 0 ]; then
+          pm2 start npm --name "laboratory-bot" -- run start
+        else
+          pm2 restart "laboratory-bot"
+        fi
+        pm2 save
+      args:
+        chdir: '{{ app_dir }}'
+        executable: /bin/bash

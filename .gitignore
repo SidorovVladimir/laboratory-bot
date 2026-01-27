@@ -1,2 +1,12 @@
 /node_modules
 .env
+*.sql
+*.log
+id_rsa*
+id_ed25519*
+/tmp/
+*.tmp
+retry-files/
+group_vars/
+host.ini
+*.vault
