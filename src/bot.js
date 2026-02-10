@@ -33,6 +33,8 @@ const bot = new Bot(token);
 const app = express();
 app.use(express.json());
 bot.use(getSession);
+app.set('view engine', 'pug')
+app.set('views', './src/views');
 
 //  Обработчик ввода пароля
 // Если сессия ожидает пароль (auth === 'auth'), проверяем введённый текст
@@ -90,10 +92,7 @@ setupMessageHandler(bot);
 setupErrorHandler(bot);
 
 app.get('/', (req, res) => {
-  res.send({
-    status: 'ok',
-    message: 'Бот работает',
-  });
+  res.render('gui');
 });
 
 async function startServer() {

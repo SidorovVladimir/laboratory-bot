@@ -1,0 +1,50 @@
+doctype html
+html
+  head
+    title Mini App
+    script(src="https://telegram.org/js/telegram-web-app.js")
+    style.
+      body { 
+        background: var(--tg-theme-bg-color, #ffffff); 
+        color: var(--tg-theme-text-color, #000000); 
+        font-family: sans-serif; 
+        text-align: center; 
+        padding: 20px; 
+      }
+      button { 
+        background: var(--tg-theme-button-color, #248bed); 
+        color: var(--tg-theme-button-text-color, #ffffff); 
+        border: none; 
+        padding: 10px 20px; 
+        border-radius: 8px; 
+        cursor: pointer; 
+      }
+  body
+    h1 Привет, #[span#user-name]!
+    p Это твой лог брифинга.
+    button#close-btn Закрыть приложение
+
+    script.
+      const tg = window.Telegram?.WebApp;
+
+      if (!tg) {
+        document.body.innerHTML = "<p>Ошибка: Откройте это приложение через Telegram.</p>";
+        throw new Error("Не в Telegram");
+      }
+
+      tg.ready();
+      tg.expand();
+
+      const user = tg.initDataUnsafe?.user;
+      const userNameEl = document.getElementById('user-name');
+
+      if (user) {
+        userNameEl.innerText = user.first_name || user.username || "Пользователь";
+      } else {
+        userNameEl.innerText = "незнакомец";
+      }
+
+      document.getElementById('close-btn').addEventListener('click', () => {
+        console.log("Кнопка нажата. Закрываем...");
+        tg.close();
+      });
