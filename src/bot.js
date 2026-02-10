@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import { Bot } from 'grammy';
+import express from 'express';
 
 import { setupMenuCommand, setupStartCommand } from './commands/index.js';
 import {
@@ -18,11 +19,13 @@ import {
   getListPPE,
 } from './handlers/index.js';
 import { getSession } from './sessions/state.js';
-import { client } from './db.js';
+import { client, initDb } from './db.js';
 import { authMiddleware } from './middleware/authMiddleware.js';
 
 const token = process.env.BOT_TOKEN_TEST;
 const bot = new Bot(token);
+const app = express();
+app.use(express.json());
 bot.use(getSession);
 
 //  Обработчик ввода пароля
@@ -74,16 +77,33 @@ setupMessageHandler(bot);
 
 setupErrorHandler(bot);
 
-const start = async () => {
-  try {
-    await client.connect();
-    console.log('Подключено к PostgreSQL');
-    bot.start();
-    console.log('Бот запущен и слушает обновления');
-  } catch (err) {
-    console.error('Ошибка при запуске:', err.stack);
-    process.exit(1);
-  }
-};
+app.get('/', (req, res) => {
+  res.send({
+    status: 'ok',
+    message: 'Бот работает',
+  });
+});
 
-await start();
+
+app.listen(3000, () => {
+  console.log(
+    'Бот запущен и слушает обновления'
+  );
+})
+
+bot.start();
+
+// const start = async () => {
+//   try {
+//     // await client.connect();
+//     console.log('Подключено к PostgreSQL');
+//     await initDb();
+//     bot.start();
+//     console.log('Бот запущен и слушает обновления');
+//   } catch (err) {
+//     console.error('Ошибка при запуске:', err.stack);
+//     process.exit(1);
+//   }
+// };
+
+// await start();
