@@ -12,4 +12,10 @@ export {
   setupCircularHandler,
   menuPPE,
   getListPPE,
+  menuJornal,
+  briefingLog,
+  briefingFireLog,
+  powerToolLog,
+  slingLog,
+  settingsLogs,
 } from './callback.js';

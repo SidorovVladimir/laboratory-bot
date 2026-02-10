@@ -17,6 +17,12 @@ import {
   setupCircularHandler,
   menuPPE,
   getListPPE,
+  menuJornal,
+  briefingLog,
+  briefingFireLog,
+  powerToolLog,
+  slingLog,
+  settingsLogs,
 } from './handlers/index.js';
 import { getSession } from './sessions/state.js';
 import { client } from './db.js';
@@ -65,7 +71,13 @@ setupStartCommand(bot);
 setupMenuCommand(bot);
 setupToolsMenu(bot);
 menuPPE(bot);
+menuJornal(bot);
 getListPPE(bot);
+briefingLog(bot);
+briefingFireLog(bot);
+powerToolLog(bot);
+slingLog(bot);
+settingsLogs(bot);
 
 setupAreaHandler(bot);
 setupRectangularHandler(bot);
