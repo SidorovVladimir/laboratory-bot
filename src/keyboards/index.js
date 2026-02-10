@@ -10,7 +10,9 @@ export const mainMenu = new InlineKeyboard()
   .row()
   .text('🌍 Полезные возможности', 'menu_tools')
   .row()
-  .text('СИЗ', 'menu_ppe');
+  .text('СИЗ', 'menu_ppe')
+  .row()
+  .text('Журналы по ОТ', 'menu_journal');
 
 export const ppeMenu = new InlineKeyboard()
   .text('Список СИЗ', 'ppe_list')
@@ -18,6 +20,20 @@ export const ppeMenu = new InlineKeyboard()
   .text('Настройки', 'settings_menu')
   .row()
   .text('🔙 Назад в главное меню', 'menu_main');
+
+export const journalMenu = new InlineKeyboard()
+  .text('Инструктажей по ОТ', 'briefing_log')
+  .row()
+  .text('Противопожарных инструктажей', 'fire_briefing_log')
+  .row()
+  .text('Учета электроинструмента', 'power_tool_log')
+  .row()
+  .text('Учета строп', 'sling_log')
+  .row()
+  .text('Настройки', 'logs_settings_menu')
+  .row()
+  .text('🔙 Назад в главное меню', 'menu_main');
+
 
 export const calculationsMenu = new InlineKeyboard()
   .text('⚡ Скорость потока', 'calc_flow_speed')

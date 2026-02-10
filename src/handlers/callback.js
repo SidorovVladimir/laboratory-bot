@@ -8,6 +8,7 @@ import {
   toolsMenu,
   flowRateMenu,
   ppeMenu,
+  journalMenu,
 } from '../keyboards/index.js';
 import { createPdfBuffer } from '../utils/generatePdf.js';
 
@@ -147,6 +148,19 @@ export const menuPPE = (bot) => {
   });
 };
 
+
+// Меню журналов по ОТ
+
+export const menuJornal = (bot) => {
+  bot.callbackQuery('menu_journal', async (ctx) => {
+    await ctx.editMessageText('Выберите пункт меню', {
+      reply_markup: journalMenu,
+    });
+    await ctx.answerCallbackQuery();
+  });
+};
+
+
 // Назад в главное меню
 
 export const backMainMenu = (bot) => {
@@ -194,3 +208,38 @@ export const getListPPE = (bot) => {
     }
   });
 };
+
+
+export const briefingLog = (bot) => {
+  bot.callbackQuery('briefing_log', async (ctx) => {
+    await ctx.answerCallbackQuery();
+  });
+};
+
+export const briefingFireLog = (bot) => {
+  bot.callbackQuery('fire_briefing_log', async (ctx) => {
+    await ctx.answerCallbackQuery();
+  });
+};
+
+
+export const powerToolLog = (bot) => {
+  bot.callbackQuery('power_tool_log', async (ctx) => {
+    await ctx.answerCallbackQuery();
+  });
+};
+
+export const slingLog = (bot) => {
+  bot.callbackQuery('sling_log', async (ctx) => {
+    await ctx.answerCallbackQuery();
+  });
+};
+
+export const settingsLogs = (bot) => {
+  bot.callbackQuery('logs_settings_menu', async (ctx) => {
+    await ctx.answerCallbackQuery();
+  });
+};
+
+
+
