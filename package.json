@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon src/bot.js",
-    "start": "node src/bot.js"
+    "start": "node src/bot.js",
+     "db-init": "node src/db.js"
   },
   "keywords": [],
   "author": "",

@@ -19,7 +19,7 @@ import {
   getListPPE,
 } from './handlers/index.js';
 import { getSession } from './sessions/state.js';
-import { client, initDb } from './db.js';
+import { client } from './db.js';
 import { authMiddleware } from './middleware/authMiddleware.js';
 
 const token = process.env.BOT_TOKEN_TEST;
@@ -84,26 +84,20 @@ app.get('/', (req, res) => {
   });
 });
 
+async function startServer() {
+  try {
+    await client.query('SELECT 1');
+    console.log('✅ База данных подключена');
+    
+    app.listen(3000, () => console.log('🚀 Сервер на порту 3000'));
 
-app.listen(3000, () => {
-  console.log(
-    'Бот запущен и слушает обновления'
-  );
-})
+    bot.start();
+    console.log('Бот запущен и слушает обновления');
+    
+  } catch (err) {
+    console.error('❌ Ошибка при запуске:', err.stack);
+    process.exit(1); 
+  }
+}
 
-bot.start();
-
-// const start = async () => {
-//   try {
-//     // await client.connect();
-//     console.log('Подключено к PostgreSQL');
-//     await initDb();
-//     bot.start();
-//     console.log('Бот запущен и слушает обновления');
-//   } catch (err) {
-//     console.error('Ошибка при запуске:', err.stack);
-//     process.exit(1);
-//   }
-// };
-
-// await start();
+await startServer();
