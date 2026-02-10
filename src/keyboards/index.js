@@ -22,6 +22,8 @@ export const ppeMenu = new InlineKeyboard()
   .text('🔙 Назад в главное меню', 'menu_main');
 
 export const journalMenu = new InlineKeyboard()
+  .webApp('Tестирование',  `${process.env.APP_URL}`)
+  .row()
   .text('Инструктажей по ОТ', 'briefing_log')
   .row()
   .text('Противопожарных инструктажей', 'fire_briefing_log')
