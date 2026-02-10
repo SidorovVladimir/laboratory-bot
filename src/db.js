@@ -16,25 +16,34 @@ export const client =
  });
 
 
-export async function initDb() {
-  const sqlPath = path.resolve(process.cwd(), 'src/init.sql');
+export async function initDb(fileName = 'init.sql') {
+  const sqlPath = path.resolve(process.cwd(), 'src', fileName);
+
+  if (!fs.existsSync(sqlPath)) {
+    console.error(`❌ Файл не найден: ${sqlPath}`);
+    process.exit(1);
+  }
+
   const sql = fs.readFileSync(sqlPath, 'utf8');
+
   try {
     if (client.exec) {
       await client.exec(sql); // Для PGlite
     } else {
       await client.query(sql); // Для Pool (Postgres)
     }
-    console.log('База успешно инициализирована!');
+    console.log(`✅ База успешно инициализирована файлом ${fileName}!`);
   } catch (err) {
-    console.error('Ошибка при выполнении init.sql:', err);
+    console.error(`❌ Ошибка при выполнении ${fileName}:`, err);
     process.exit(1);
   }
 }
 
 if (process.argv[1] === path.resolve(process.cwd(), 'src/db.js')) {
+
+  const customFile = process.argv[2]; 
   console.log('Запуск инициализации БД...');
-  initDb().then(() => {
+  initDb(customFile).then(() => {
     console.log('Готово!');
     process.exit(0);
   }).catch((err) => {
