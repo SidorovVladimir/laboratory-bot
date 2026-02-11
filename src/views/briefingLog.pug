@@ -1,0 +1,118 @@
+doctype html
+html
+  head
+    title Mini App
+    script(src="https://telegram.org/js/telegram-web-app.js")
+    style.
+      body {
+        background-color: var(--tg-theme-bg-color, #ffffff);
+        color: var(--tg-theme-text-color, #000000);
+        margin: 0;
+        padding: 10px;
+        font-family: sans-serif;
+      }
+
+      p {
+        color: var(--tg-theme-hint-color, #999);
+        font-size: 14px;
+        margin-bottom: 15px;
+      }
+
+      .table-container {
+        overflow-x: auto; /* Свайп для узких экранов */
+        border-radius: 10px;
+      }
+
+      .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: var(--tg-theme-secondary-bg-color, #f5f5f5);
+      }
+
+      .custom-table th {
+        background: var(--tg-theme-secondary-bg-color, #f4f4f4);
+        color: var(--tg-theme-hint-color, #777);
+        padding: 12px 10px;
+        text-align: left;
+        font-size: 12px;
+        text-transform: uppercase;
+        border-bottom: 1px solid var(--tg-theme-divider-color, #ddd);
+      }
+
+      .custom-table td {
+        padding: 12px 10px;
+        border-bottom: 0.5px solid var(--tg-theme-divider-color, #eee);
+        color: var(--tg-theme-text-color, #000);
+        font-size: 14px;
+      }
+
+      .custom-table tr:active {
+        background-color: var(--tg-theme-bg-color, #fff);
+      }
+
+      .btn-refresh {
+        background-color: var(--tg-theme-button-color, #248bed);
+        color: var(--tg-theme-button-text-color, #ffffff);
+        border: none;
+        padding: 8px 10px;
+        border-radius: 8px;
+        font-size: 11px;
+        cursor: pointer;
+        font-weight: bold;
+        white-space: nowrap;
+      }
+
+      .btn-refresh:active {
+        opacity: 0.7;
+      }
+  body
+    p Журнал регистрации инструктажей по охране труда на работчем месте.
+   
+    .table-container
+      table.custom-table
+        thead
+          tr
+            th Дата инструктажа
+            th ФИО
+            th Должность
+            th Вид инструктажа
+            th Действия
+        tbody
+          each list in lists
+            tr
+              td= new Date(list.date).toLocaleDateString('ru-RU')
+              td= list.full_name
+              td= list.job_title
+              td= list.briefing_type
+              td
+                button.btn-refresh(onclick=`refreshDate('${list._id}')`) 🔄 Обновить на сегодня
+    
+    
+    script.
+      const tg = window.Telegram?.WebApp;
+
+      if (!tg) {
+        document.body.innerHTML = "<p>Ошибка: Откройте это приложение через Telegram.</p>";
+        throw new Error("Не в Telegram");
+      }
+
+      tg.ready();
+      tg.expand();
+
+      async function refreshDate(id) {
+        try {
+          const response = await fetch(`/api/update-date/${id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (response.ok) {
+          tg.showAlert('Дата успешно обновлена!');
+          window.location.reload(); 
+        } else {
+          tg.showPopup({ message: 'Ошибка при обновлении даты' });
+        }
+        } catch (err) {
+          console.error('Ошибка:', err);
+        }
+      }

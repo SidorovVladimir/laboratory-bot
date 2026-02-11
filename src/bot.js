@@ -27,11 +27,13 @@ import {
 import { getSession } from './sessions/state.js';
 import { client } from './db.js';
 import { authMiddleware } from './middleware/authMiddleware.js';
+import router from './routes/index.js';
 
 const token = process.env.BOT_TOKEN_TEST;
 const bot = new Bot(token);
 const app = express();
 app.use(express.json());
+app.use('/api', router);
 bot.use(getSession);
 app.set('view engine', 'pug')
 app.set('views', './src/views');
@@ -90,10 +92,6 @@ setupWeatherHandler(bot);
 setupMessageHandler(bot);
 
 setupErrorHandler(bot);
-
-app.get('/', (req, res) => {
-  res.render('gui');
-});
 
 async function startServer() {
   try {
