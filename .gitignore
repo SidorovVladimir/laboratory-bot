@@ -11,3 +11,4 @@ retry-files/
 group_vars/
 host.ini
 *.vault
+*.vscode

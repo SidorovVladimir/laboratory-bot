@@ -210,31 +210,6 @@ export const getListPPE = (bot) => {
 };
 
 
-export const briefingLog = (bot) => {
-  bot.callbackQuery('briefing_log', async (ctx) => {
-    await ctx.answerCallbackQuery();
-  });
-};
-
-export const briefingFireLog = (bot) => {
-  bot.callbackQuery('fire_briefing_log', async (ctx) => {
-    await ctx.answerCallbackQuery();
-  });
-};
-
-
-export const powerToolLog = (bot) => {
-  bot.callbackQuery('power_tool_log', async (ctx) => {
-    await ctx.answerCallbackQuery();
-  });
-};
-
-export const slingLog = (bot) => {
-  bot.callbackQuery('sling_log', async (ctx) => {
-    await ctx.answerCallbackQuery();
-  });
-};
-
 export const settingsLogs = (bot) => {
   bot.callbackQuery('logs_settings_menu', async (ctx) => {
     await ctx.answerCallbackQuery();
