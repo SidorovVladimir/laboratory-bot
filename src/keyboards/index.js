@@ -22,18 +22,29 @@ export const ppeMenu = new InlineKeyboard()
   .text('🔙 Назад в главное меню', 'menu_main');
 
 export const journalMenu = new InlineKeyboard()
-  .webApp('Инструктажей по ОТ', `${process.env.APP_URL}api/journals/briefing-log`)
+  .webApp(
+    'Инструктажей по ОТ',
+    `${process.env.APP_URL}api/journals/briefing-log`
+  )
   .row()
-  .webApp('Противопожарных инструктажей', `${process.env.APP_URL}api/journals/fire-briefing-log`)
+  .webApp(
+    'Противопожарных инструктажей',
+    `${process.env.APP_URL}api/journals/fire-briefing-log`
+  )
   .row()
-  .webApp('Учета электроинструмента', `${process.env.APP_URL}api/journals/power-tool-log`)
+  .webApp(
+    'Учета электроинструмента',
+    `${process.env.APP_URL}api/journals/power-tool-inspection-log`
+  )
   .row()
-  .webApp('Учета строп', `${process.env.APP_URL}api/journals/sling-log`)
+  .webApp(
+    'Учета строп',
+    `${process.env.APP_URL}api/journals/sling-inspection-log`
+  )
   .row()
   .text('Настройки', 'logs_settings_menu')
   .row()
   .text('🔙 Назад в главное меню', 'menu_main');
-
 
 export const calculationsMenu = new InlineKeyboard()
   .text('⚡ Скорость потока', 'calc_flow_speed')

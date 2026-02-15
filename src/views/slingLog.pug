@@ -1,0 +1,57 @@
+extends layout.pug
+block content
+  body
+    p Журнал осмотра строп.
+   
+    .table-container
+      table.custom-table
+        thead
+          tr
+            th Наименование
+            th Инвертарный номер
+            th Дата осмотра и испытаний
+            th Действия
+        tbody
+          each list in lists
+            tr
+              td= list.name
+              td= list.inventory_number
+              td
+                span(id=`date-text-${list.id}`) #{new Date(list.date).toLocaleDateString('ru-RU')}
+              td
+                button.btn-refresh(onclick=`refreshDate('${list.id}')`) 🔄 Обновить на сегодня
+
+    script.
+      const tg = window.Telegram?.WebApp;
+
+      if (!tg) {
+        document.body.innerHTML = "<p>Ошибка: Откройте это приложение через Telegram.</p>";
+        throw new Error("Не в Telegram");
+      }
+
+      tg.ready();
+      tg.expand();
+
+      async function refreshDate(id) {
+        try {
+          const response = await fetch(`/api/journals/sling-inspection-log/update/${id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const newDate = new Date(data.date).toLocaleDateString('ru-RU'); 
+
+          const el = document.getElementById(`date-text-${id}`);
+          if (el) el.innerText = newDate;
+
+          tg.showAlert('Дата успешно обновлена!');
+          //- window.location.reload(); 
+        } else {
+          tg.showPopup({ message: 'Ошибка при обновлении даты' });
+        }
+        } catch (err) {
+          console.error('Ошибка:', err);
+        }
+      }
