@@ -24,6 +24,7 @@ import { getSession } from './sessions/state.js';
 import { client } from './db.js';
 import { authMiddleware } from './middleware/authMiddleware.js';
 import router from './routes/index.js';
+import { startDailyCronJob } from './utils/startDailyCronJob.js';
 
 const token = process.env.BOT_TOKEN_TEST;
 const bot = new Bot(token);
@@ -31,7 +32,7 @@ const app = express();
 app.use(express.json());
 app.use('/api', router);
 bot.use(getSession);
-app.set('view engine', 'pug')
+app.set('view engine', 'pug');
 app.set('views', './src/views');
 
 //  Обработчик ввода пароля
@@ -89,15 +90,16 @@ async function startServer() {
   try {
     await client.query('SELECT 1');
     console.log('✅ База данных подключена');
-    
+
     app.listen(3000, () => console.log('🚀 Сервер на порту 3000'));
 
     bot.start();
     console.log('Бот запущен и слушает обновления');
-    
+
+    startDailyCronJob();
   } catch (err) {
     console.error('❌ Ошибка при запуске:', err.stack);
-    process.exit(1); 
+    process.exit(1);
   }
 }
 
