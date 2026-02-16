@@ -96,7 +96,7 @@ async function startServer() {
     bot.start();
     console.log('Бот запущен и слушает обновления');
 
-    startDailyCronJob();
+    startDailyCronJob(bot);
   } catch (err) {
     console.error('❌ Ошибка при запуске:', err.stack);
     process.exit(1);
