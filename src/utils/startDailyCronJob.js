@@ -51,7 +51,7 @@ export const startDailyCronJob = (bot) => {
       }
 
       const messageText =`🚨 *Напоминание о проверках (< 5 дней):*\n\n${alerts.join('\n\n')}`.trim();
-      const chatIds = await client.query(`SELECT user_chat_id FROM auth`);
+      const chatIds = await client.query(`SELECT user_chat_id FROM auth WHERE is_notifications_enabled = TRUE`);
       for (const row of chatIds.rows) {
         try {
           await bot.api.sendMessage(row.user_chat_id, messageText, {

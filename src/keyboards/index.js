@@ -46,6 +46,18 @@ export const journalMenu = new InlineKeyboard()
   .row()
   .text('🔙 Назад в главное меню', 'menu_main');
 
+  export const getSettingsLogsMenu = (isEnabled) => {
+    const keyboard = new InlineKeyboard();
+    if (isEnabled) {
+      keyboard.text('🔕 Выключить уведомления', 'disable_notif')
+    } else {
+      keyboard.text('🔔 Включить уведомления', 'enable_notif')
+      }
+    return keyboard
+      .row()
+      .text('🔙 Назад в главное меню', 'menu_main');
+  };
+
 export const calculationsMenu = new InlineKeyboard()
   .text('⚡ Скорость потока', 'calc_flow_speed')
   .row()

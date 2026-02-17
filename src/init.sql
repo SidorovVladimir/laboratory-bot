@@ -66,7 +66,8 @@ CREATE TABLE IF NOT EXISTS personal_protective_equipments (
 CREATE TABLE IF NOT EXISTS auth (
   id SERIAL PRIMARY KEY,
   user_chat_id INTEGER NOT NULL,
-  first_name VARCHAR(100) NOT NULL
+  first_name VARCHAR(100) NOT NULL,
+  is_notifications_enabled BOOLEAN DEFAULT TRUE
 );
 
 -- Создаём таблицу журнал инструктажей на рабочем месте

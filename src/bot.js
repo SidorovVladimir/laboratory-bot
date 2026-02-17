@@ -19,6 +19,7 @@ import {
   getListPPE,
   menuJornal,
   settingsLogs,
+  setNotifications,
 } from './handlers/index.js';
 import { getSession } from './sessions/state.js';
 import { client } from './db.js';
@@ -75,6 +76,7 @@ menuPPE(bot);
 menuJornal(bot);
 getListPPE(bot);
 settingsLogs(bot);
+setNotifications(bot);
 
 setupAreaHandler(bot);
 setupRectangularHandler(bot);

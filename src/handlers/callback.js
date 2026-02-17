@@ -9,6 +9,7 @@ import {
   flowRateMenu,
   ppeMenu,
   journalMenu,
+  getSettingsLogsMenu,
 } from '../keyboards/index.js';
 import { createPdfBuffer } from '../utils/generatePdf.js';
 
@@ -200,8 +201,8 @@ export const getListPPE = (bot) => {
           caption: '✅ Готово! Вот ваш отчёт в формате PDF.',
         }
       );
-
       await ctx.answerCallbackQuery();
+
     } catch (err) {
       console.error('Ошибка генерации PDF:', err);
       await ctx.reply('❌ Произошла ошибка при создании отчёта.');
@@ -212,9 +213,33 @@ export const getListPPE = (bot) => {
 
 export const settingsLogs = (bot) => {
   bot.callbackQuery('logs_settings_menu', async (ctx) => {
+    
+    const { is_notifications_enabled: isNotificationEnabled } = (await client.query(`SELECT is_notifications_enabled FROM auth WHERE user_chat_id = $1`, [ctx.from.id])).rows[0] || {};
+    await ctx.editMessageText('Выберите пункт меню', {
+      reply_markup: getSettingsLogsMenu(isNotificationEnabled),
+    });
     await ctx.answerCallbackQuery();
   });
 };
+
+export const setNotifications = (bot) => {
+  bot.callbackQuery(['enable_notif', 'disable_notif'], async (ctx) => {
+  const res = await client.query(
+    `UPDATE auth SET is_notifications_enabled = NOT is_notifications_enabled WHERE user_chat_id = $1 RETURNING is_notifications_enabled`,
+    [ctx.from.id]
+  );
+  const newValue = res.rows[0].is_notifications_enabled;
+
+  await ctx.answerCallbackQuery({
+    text: newValue ? "Уведомления включены" : "Уведомления выключены"
+  });
+  await ctx.editMessageReplyMarkup({
+    reply_markup: getSettingsLogsMenu(newValue) 
+  });
+  })
+}
+
+
 
 
 

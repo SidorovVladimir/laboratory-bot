@@ -14,4 +14,5 @@ export {
   getListPPE,
   menuJornal,
   settingsLogs,
+  setNotifications,
 } from './callback.js';
