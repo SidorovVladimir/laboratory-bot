@@ -1,7 +1,6 @@
 import { calculateArea } from '../utils/calculateArea.js';
 import { calculateFlowRate } from '../utils/calculateFlowRate.js';
 import { mainMenu } from '../keyboards/index.js';
-import { getWeather } from '../api/weather/index.js';
 
 export const setupMessageHandler = (bot) => {
   bot.on('message:text', async (ctx) => {
@@ -54,23 +53,7 @@ export const setupMessageHandler = (bot) => {
 
         ctx.session.flowRate.state = 'idle';
       }
-
-      // Обработка отвента пользователя для получения прогноза погоды по городу
-      if (ctx.session.weather.state === 'waiting_weather') {
-        const weatherData = await getWeather(value);
-        const { temp_c, pressure_mb, humidity } = weatherData.current;
-        await ctx.deleteMessage().catch(() => {});
-        await ctx.api.editMessageText(
-          ctx.chat.id,
-          ctx.session.menuMessageId,
-          `Погода в городе ${value}:\nТемпература ${temp_c}°C\nДавление ${
-            pressure_mb / 10
-          } кПа\nВлажность ${humidity}%`,
-          { reply_markup: mainMenu }
-        );
-
-        ctx.session.weather.state = 'idle';
-      }
+      
     } catch (error) {
       console.error('Ошибка при обработке ввода:', error);
     }

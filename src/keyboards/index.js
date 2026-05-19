@@ -6,58 +6,8 @@ export const backKeyboard = new InlineKeyboard().text(
 );
 
 export const mainMenu = new InlineKeyboard()
-  .text('🧮 Расчеты', 'menu_calculations')
-  .row()
-  .text('🌍 Полезные возможности', 'menu_tools')
-  .row()
-  .text('СИЗ', 'menu_ppe')
-  .row()
-  .text('Журналы по ОТ', 'menu_journal');
-
-export const ppeMenu = new InlineKeyboard()
-  .text('Список СИЗ', 'ppe_list')
-  .row()
-  .text('Настройки', 'settings_menu')
-  .row()
-  .text('🔙 Назад в главное меню', 'menu_main');
-
-export const journalMenu = new InlineKeyboard()
-  .webApp(
-    'Инструктажей по ОТ',
-    `${process.env.APP_URL}api/journals/briefing-log`
-  )
-  .row()
-  .webApp(
-    'Противопожарных инструктажей',
-    `${process.env.APP_URL}api/journals/fire-briefing-log`
-  )
-  .row()
-  .webApp(
-    'Учета электроинструмента',
-    `${process.env.APP_URL}api/journals/power-tool-inspection-log`
-  )
-  .row()
-  .webApp(
-    'Учета строп',
-    `${process.env.APP_URL}api/journals/sling-inspection-log`
-  )
-  .row()
-  .text('Настройки', 'logs_settings_menu')
-  .row()
-  .text('🔙 Назад в главное меню', 'menu_main');
-
-  export const getSettingsLogsMenu = (isEnabled) => {
-    const keyboard = new InlineKeyboard();
-    if (isEnabled) {
-      keyboard.text('🔕 Выключить уведомления', 'disable_notif')
-    } else {
-      keyboard.text('🔔 Включить уведомления', 'enable_notif')
-      }
-    return keyboard
-      .row()
-      .text('🔙 Назад в главное меню', 'menu_main');
-  };
-
+  .text('🧮 Расчеты', 'menu_calculations');
+  
 export const calculationsMenu = new InlineKeyboard()
   .text('⚡ Скорость потока', 'calc_flow_speed')
   .row()
@@ -78,8 +28,3 @@ export const areaMenu = new InlineKeyboard()
   .text('📐 Площадь боковой поверхности цилиндра', 'area')
   .row()
   .text('🔙 Назад в главное меню', 'menu_main');
-
-export const toolsMenu = new InlineKeyboard()
-  .text('☀️ Прогноз погоды', 'tool_weather') // Кнопка "Прогноз погоды"
-  .row()
-  .text('🔙 Назад в главное меню', 'menu_main'); // Кнопка "Назад"

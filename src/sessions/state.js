@@ -8,9 +8,6 @@ export const getSession = session({
     flowRate: {
       state: 'idle',
     },
-    weather: {
-      state: 'idle',
-    },
     menuMessageId: null,
     auth: null,
   }),

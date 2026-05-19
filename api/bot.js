@@ -1,8 +1,7 @@
 import 'dotenv/config';
-import { Bot } from 'grammy';
-import express from 'express';
+import { Bot, webhookCallback  } from 'grammy';
 
-import { setupMenuCommand, setupStartCommand } from './commands/index.js';
+import { setupMenuCommand, setupStartCommand } from '../commands/index.js';
 import {
   setupAreaHandler,
   setupMessageHandler,
@@ -10,31 +9,20 @@ import {
   setupErrorHandler,
   menuCalculations,
   backMainMenu,
-  setupToolsMenu,
   menuArea,
   menuFlowRate,
   setupRectangularHandler,
   setupCircularHandler,
-  menuPPE,
-  getListPPE,
-  menuJornal,
-  settingsLogs,
-  setNotifications,
-} from './handlers/index.js';
-import { getSession } from './sessions/state.js';
-import { client } from './db.js';
-import { authMiddleware } from './middleware/authMiddleware.js';
-import router from './routes/index.js';
-import { startDailyCronJob } from './utils/startDailyCronJob.js';
+} from '../handlers/index.js';
+import { getSession } from '../sessions/state.js';
+import { authMiddleware } from '../middleware/authMiddleware.js';
 
-const token = process.env.BOT_TOKEN_TEST;
+
+const token = process.env.BOT_TOKEN;
+if (!token) throw new Error("BOT_TOKEN is unset");
 const bot = new Bot(token);
-const app = express();
-app.use(express.json());
-app.use('/api', router);
+
 bot.use(getSession);
-app.set('view engine', 'pug');
-app.set('views', './src/views');
 
 //  Обработчик ввода пароля
 // Если сессия ожидает пароль (auth === 'auth'), проверяем введённый текст
@@ -71,38 +59,11 @@ menuArea(bot);
 menuFlowRate(bot);
 setupStartCommand(bot);
 setupMenuCommand(bot);
-setupToolsMenu(bot);
-menuPPE(bot);
-menuJornal(bot);
-getListPPE(bot);
-settingsLogs(bot);
-setNotifications(bot);
-
 setupAreaHandler(bot);
 setupRectangularHandler(bot);
 setupCircularHandler(bot);
 backMainMenu(bot);
-setupWeatherHandler(bot);
-
 setupMessageHandler(bot);
-
 setupErrorHandler(bot);
 
-async function startServer() {
-  try {
-    await client.query('SELECT 1');
-    console.log('✅ База данных подключена');
-
-    app.listen(3000, () => console.log('🚀 Сервер на порту 3000'));
-
-    bot.start();
-    console.log('Бот запущен и слушает обновления');
-
-    startDailyCronJob(bot);
-  } catch (err) {
-    console.error('❌ Ошибка при запуске:', err.stack);
-    process.exit(1);
-  }
-}
-
-await startServer();
+export default webhookCallback(bot, "https");
