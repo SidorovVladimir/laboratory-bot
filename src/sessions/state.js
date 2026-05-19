@@ -9,6 +9,5 @@ export const getSession = session({
       state: 'idle',
     },
     menuMessageId: null,
-    auth: null,
   }),
 });
